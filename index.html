@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload Photos</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 500px;
+      margin: 80px auto;
+      padding: 20px;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    input {
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 10px 20px;
+      cursor: pointer;
+    }
+
+    #status {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h2>Upload Instagram Screenshots</h2>
+
+  <input
+    type="file"
+    id="photos"
+    accept="image/png,image/jpeg"
+    multiple
+  >
+
+  <br>
+
+  <button onclick="uploadPhotos()">Submit</button>
+
+  <p id="status"></p>
+
+  <script>
+    async function uploadPhotos() {
+
+      const input = document.getElementById("photos");
+      const status = document.getElementById("status");
+
+      if (input.files.length === 0) {
+        status.textContent = "Please select photos.";
+        return;
+      }
+
+      const formData = new FormData();
+
+      // Har selected photo ko "photos" field ke naam se add karo
+      for (const file of input.files) {
+        formData.append("photos", file);
+      }
+
+      status.textContent = "Uploading...";
+
+      try {
+
+        const response = await fetch(
+          "https://agency-amaan.app.n8n.cloud/webhook-test/391c2f48-6e21-4d40-96fb-837686e13860",
+          {
+            method: "POST",
+            body: formData
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Upload failed");
+        }
+
+        status.textContent = "Photos uploaded successfully!";
+
+      } catch (error) {
+
+        console.error(error);
+        status.textContent = "Something went wrong.";
+
+      }
+    }
+  </script>
+
+</body>
+</html>
