@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Upload Photos</title>
+
+  <title>Lead Generator</title>
 
   <link rel="stylesheet" href="style.css">
 </head>
@@ -21,14 +22,24 @@
 
   <br>
 
-  <button onclick="addPhotos()">Add Photos</button>
-  <button onclick="uploadPhotos()">Submit</button>
+  <button id="addButton" onclick="addPhotos()">
+    Add Photos
+  </button>
+
+  <button id="submitButton" onclick="uploadPhotos()">
+    Submit
+  </button>
 
   <div id="fileList"></div>
 
   <p id="status"></p>
 
-  <!-- Results -->
+  <div id="loader" class="hidden">
+    <div class="spinner"></div>
+    <p>Processing your leads...</p>
+    <small>This may take a moment.</small>
+  </div>
+
   <div id="results"></div>
 
   <script src="script.js"></script>

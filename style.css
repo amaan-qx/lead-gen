@@ -19,6 +19,11 @@ button {
   margin-right: 10px;
 }
 
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
 #status {
   margin-top: 20px;
 }
@@ -30,6 +35,40 @@ button {
 .file {
   margin: 5px 0;
 }
+
+#loader {
+  margin-top: 25px;
+  text-align: center;
+}
+
+.hidden {
+  display: none;
+}
+
+.spinner {
+  width: 30px;
+  height: 30px;
+  border: 4px solid #ddd;
+  border-top: 4px solid #333;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 10px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+#loader p {
+  margin: 5px 0;
+}
+
+#loader small {
+  color: #666;
+}
+
 #results {
   margin-top: 30px;
 }
