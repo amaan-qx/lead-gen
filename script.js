@@ -41,6 +41,67 @@ function showFiles() {
 }
 
 
+function showResults(results) {
+
+  const container = document.getElementById("results");
+
+  container.innerHTML = "";
+
+  results.forEach((brand) => {
+
+    const div = document.createElement("div");
+
+    div.className = "result";
+
+
+    // Brand name
+    const name = document.createElement("span");
+
+    name.textContent = brand.brand_name;
+
+
+    // Copy button
+    const copyButton = document.createElement("button");
+
+    copyButton.textContent = "Copy";
+
+    copyButton.onclick = async () => {
+
+      await navigator.clipboard.writeText(brand.message);
+
+      copyButton.textContent = "Copied!";
+
+      setTimeout(() => {
+        copyButton.textContent = "Copy";
+      }, 1500);
+
+    };
+
+
+    // Instagram button
+    const instagramButton = document.createElement("a");
+
+    instagramButton.textContent = "Open Instagram";
+
+    instagramButton.href = brand.instagram_url;
+
+    instagramButton.target = "_blank";
+
+    instagramButton.rel = "noopener noreferrer";
+
+
+    // Add everything
+    div.appendChild(name);
+    div.appendChild(copyButton);
+    div.appendChild(instagramButton);
+
+    container.appendChild(div);
+
+  });
+
+}
+
+
 async function uploadPhotos() {
 
   const status = document.getElementById("status");
@@ -69,20 +130,36 @@ async function uploadPhotos() {
       }
     );
 
+
     const text = await response.text();
 
     console.log("Status:", response.status);
     console.log("Response:", text);
 
+
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}: ${text}`);
     }
 
+
+    // Convert n8n response to JSON
+    const data = JSON.parse(text);
+
+    console.log("Data:", data);
+
+
+    // Show brands
+    showResults(data.results);
+
+
     status.textContent =
-      "Photos uploaded successfully!";
+      "Photos processed successfully!";
+
 
     selectedFiles = [];
+
     showFiles();
+
 
   } catch (error) {
 
