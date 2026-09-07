@@ -11,26 +11,19 @@
 
 <body>
 
-  <h2>Upload Instagram Screenshots</h2>
+  <h2>Instagram Leads</h2>
 
-  <input
-    type="file"
-    id="photos"
-    accept="image/png,image/jpeg"
-    multiple
-  >
+  <textarea
+    id="leadText"
+    placeholder="Paste Instagram usernames here..."
+    rows="12"
+  ></textarea>
 
   <br>
 
-  <button id="addButton" onclick="addPhotos()">
-    Add Photos
-  </button>
-
-  <button id="submitButton" onclick="uploadPhotos()">
+  <button id="submitButton" onclick="submitLeads()">
     Submit
   </button>
-
-  <div id="fileList"></div>
 
   <p id="status"></p>
 

@@ -1,41 +1,5 @@
-let selectedFiles = [];
-
-function addPhotos() {
-  const input = document.getElementById("photos");
-
-  if (input.files.length === 0) {
-    return;
-  }
-
-  // Add newly selected files
-  for (const file of input.files) {
-    selectedFiles.push(file);
-  }
-
-  // Clear input so same file can be selected again
-  input.value = "";
-
-  showFiles();
-}
-
-
-function showFiles() {
-  const fileList = document.getElementById("fileList");
-
-  fileList.innerHTML = "";
-
-  selectedFiles.forEach((file, index) => {
-    const div = document.createElement("div");
-
-    div.className = "file";
-    div.textContent = `${index + 1}. ${file.name}`;
-
-    fileList.appendChild(div);
-  });
-}
-
-
 function showResults(results) {
+
   const container = document.getElementById("results");
 
   container.innerHTML = "";
@@ -43,16 +7,15 @@ function showResults(results) {
   results.forEach((brand) => {
 
     const div = document.createElement("div");
+
     div.className = "result";
 
 
-    // Brand name
     const name = document.createElement("span");
 
     name.textContent = brand.brand_name;
 
 
-    // Copy button
     const copyButton = document.createElement("button");
 
     copyButton.textContent = "Copy";
@@ -74,10 +37,10 @@ function showResults(results) {
         console.error("Copy failed:", error);
 
       }
+
     };
 
 
-    // Instagram button
     const instagramButton = document.createElement("a");
 
     instagramButton.textContent = "Open Instagram";
@@ -89,7 +52,6 @@ function showResults(results) {
     instagramButton.rel = "noopener noreferrer";
 
 
-    // Add everything
     div.appendChild(name);
 
     div.appendChild(copyButton);
@@ -97,57 +59,51 @@ function showResults(results) {
     div.appendChild(instagramButton);
 
     container.appendChild(div);
+
   });
+
 }
 
 
-async function uploadPhotos() {
+async function submitLeads() {
 
   const status = document.getElementById("status");
 
   const submitButton = document.getElementById("submitButton");
 
-  const addButton = document.getElementById("addButton");
-
   const loader = document.getElementById("loader");
 
+  const leadText = document.getElementById("leadText").value.trim();
 
-  // No files
-  if (selectedFiles.length === 0) {
 
-    status.textContent = "Please select photos.";
+  // No text
+
+  if (!leadText) {
+
+    status.textContent = "Please paste Instagram usernames.";
 
     return;
+
   }
 
 
-  // Disable buttons
-  submitButton.disabled = true;
+  // Disable button
 
-  addButton.disabled = true;
+  submitButton.disabled = true;
 
   submitButton.textContent = "Processing...";
 
 
   // Clear previous results
+
   document.getElementById("results").innerHTML = "";
 
 
   // Show loader
+
   loader.classList.remove("hidden");
 
-  status.textContent =
-    `Processing ${selectedFiles.length} photo${selectedFiles.length > 1 ? "s" : ""}...`;
-
-
-  // Create form data
-  const formData = new FormData();
-
-  for (const file of selectedFiles) {
-
-    formData.append("photos", file);
-
-  }
+  status.textContent = "Processing your leads...";
 
 
   try {
@@ -156,7 +112,14 @@ async function uploadPhotos() {
       "https://agency-amaan.app.n8n.cloud/webhook/391c2f48-6e21-4d40-96fb-837686e13860",
       {
         method: "POST",
-        body: formData
+
+        headers: {
+          "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+          text: leadText
+        })
       }
     );
 
@@ -182,7 +145,8 @@ async function uploadPhotos() {
     console.log("Data:", data);
 
 
-    // Make sure results exist
+    // Results check
+
     if (!data.results || !Array.isArray(data.results)) {
 
       throw new Error("Invalid response from server.");
@@ -190,24 +154,16 @@ async function uploadPhotos() {
     }
 
 
-    // Display results
     showResults(data.results);
 
 
-    // Success
     status.textContent =
       `Done! Found ${data.results.length} lead${data.results.length !== 1 ? "s" : ""}.`;
 
 
-    // Clear selected files
-    selectedFiles = [];
-
-    showFiles();
-
-
   } catch (error) {
 
-    console.error("Upload failed:", error);
+    console.error("Request failed:", error);
 
     status.textContent =
       `Something went wrong: ${error.message}`;
@@ -216,13 +172,14 @@ async function uploadPhotos() {
 
 
   // Hide loader
+
   loader.classList.add("hidden");
 
 
-  // Enable buttons again
+  // Enable button
+
   submitButton.disabled = false;
 
-  addButton.disabled = false;
-
   submitButton.textContent = "Submit";
+
 }
