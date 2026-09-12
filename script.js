@@ -109,7 +109,7 @@ async function submitLeads() {
   try {
 
     const response = await fetch(
-      "https://agency-amaan.app.n8n.cloud/webhook/391c2f48-6e21-4d40-96fb-837686e13860",
+      "https://amaannn-188.app.n8n.cloud/webhook/391c2f48-6e21-4d40-96fb-837686e13860",
       {
         method: "POST",
 
